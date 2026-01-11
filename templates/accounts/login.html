@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Login{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <span class="auth-icon">🍞</span>
+                <h1 class="auth-title">Welcome Back!</h1>
+                <p class="auth-subtitle">Sign in to your account</p>
+            </div>
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label for="id_username" class="form-label">Email</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <span class="form-error">{{ form.username.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_password" class="form-label">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <span class="form-error">{{ form.password.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-link">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="{% url 'accounts:register' %}" class="auth-link">Create one</a></p>
+            </div>
+        </div>
+
+        <div class="auth-image">
+            <div class="auth-image-overlay"></div>
+            <div class="auth-image-content">
+                <h2>Freshly Baked Happiness</h2>
+                <p>Join thousands of customers who enjoy our daily baked delights.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Message from {{ message.name }}{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>Message Details</h1>
+        <nav class="admin-breadcrumb">
+            <a href="{% url 'admin_panel:messages' %}">Messages</a> / <span>{{ message.subject }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <div class="message-detail">
+            <div class="message-header">
+                <div class="message-from">
+                    <strong>{{ message.name }}</strong>
+                    <span>&lt;{{ message.email }}&gt;</span>
+                </div>
+                <div class="message-date">{{ message.created_at|date:"F d, Y" }} at {{ message.created_at|time:"H:i" }}
+                </div>
+            </div>
+            <div class="message-subject">
+                <strong>Subject:</strong> {{ message.subject }}
+            </div>
+            <div class="message-body">
+                {{ message.message|linebreaks }}
+            </div>
+            <div class="message-actions">
+                <a href="mailto:{{ message.email }}?subject=Re: {{ message.subject }}"
+                    class="btn btn-admin-primary">Reply via Email</a>
+                <a href="{% url 'admin_panel:messages' %}" class="btn btn-admin-outline">Back to Messages</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

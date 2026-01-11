@@ -1,0 +1,60 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>{{ title }}</h1>
+        <nav class="admin-breadcrumb">
+            <a href="{% url 'admin_panel:categories' %}">Categories</a> / <span>{{ title }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <form method="POST" enctype="multipart/form-data" class="admin-form">
+            {% csrf_token %}
+
+            <div class="form-row">
+                <div class="form-group form-group-large">
+                    <label for="id_name">Category Name *</label>
+                    {{ form.name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_slug">Slug *</label>
+                    {{ form.slug }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="id_description">Description</label>
+                {{ form.description }}
+            </div>
+
+            <div class="form-group">
+                <label for="id_image">Category Image</label>
+                {% if category.image %}
+                <div class="current-image">
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}" style="max-width: 150px;">
+                </div>
+                {% endif %}
+                {{ form.image }}
+            </div>
+
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    {{ form.is_active }}
+                    <span>Active</span>
+                </label>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-admin-primary">Save Category</button>
+                <a href="{% url 'admin_panel:categories' %}" class="btn btn-admin-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

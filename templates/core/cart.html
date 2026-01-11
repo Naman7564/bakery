@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Shopping Cart{% endblock %}
+
+{% block content %}
+<section class="cart-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Shopping Cart</h1>
+            <p class="page-subtitle">{% if cart.item_count %}{{ cart.item_count }} item{{ cart.item_count|pluralize }}
+                in your cart{% else %}Your cart is empty{% endif %}</p>
+        </div>
+
+        {% if cart.items.all %}
+        <div class="cart-layout">
+            <div class="cart-items">
+                {% for item in cart.items.all %}
+                <div class="cart-item" data-item-id="{{ item.id }}">
+                    <div class="cart-item-image">
+                        {% if item.product.image %}
+                        <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                        {% else %}
+                        <div class="product-placeholder">🧁</div>
+                        {% endif %}
+                    </div>
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name">{{ item.product.name }}</h3>
+                        <p class="cart-item-category">{{ item.product.category.name }}</p>
+                        <p class="cart-item-price">${{ item.product.price }}</p>
+                    </div>
+                    <div class="cart-item-quantity">
+                        <form action="{% url 'core:update_cart' item_id=item.id %}" method="POST" class="quantity-form">
+                            {% csrf_token %}
+                            <button type="button" class="qty-btn minus" data-action="decrease">-</button>
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="qty-input">
+                            <button type="button" class="qty-btn plus" data-action="increase">+</button>
+                        </form>
+                    </div>
+                    <div class="cart-item-subtotal">
+                        <span class="subtotal-label">Subtotal</span>
+                        <span class="subtotal-value">${{ item.subtotal }}</span>
+                    </div>
+                    <form action="{% url 'core:remove_from_cart' item_id=item.id %}" method="POST" class="remove-form">
+                        {% csrf_token %}
+                        <button type="submit" class="cart-item-remove" aria-label="Remove item">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path
+                                    d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                </path>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="cart-summary">
+                <div class="cart-summary-card">
+                    <h3 class="summary-title">Order Summary</h3>
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <span class="cart-subtotal">${{ cart.total }}</span>
+                    </div>
+                    <div class="summary-row">
+                        <span>Delivery</span>
+                        <span class="delivery-fee">Calculated at checkout</span>
+                    </div>
+                    <hr class="summary-divider">
+                    <div class="summary-row summary-total">
+                        <span>Total</span>
+                        <span class="cart-total">${{ cart.total }}</span>
+                    </div>
+                    <a href="{% url 'core:checkout' %}" class="btn btn-primary btn-full">Proceed to Checkout</a>
+                    <a href="{% url 'core:products' %}" class="btn btn-outline btn-full">Continue Shopping</a>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="empty-cart">
+            <span class="empty-cart-icon">🛒</span>
+            <h2>Your cart is empty</h2>
+            <p>Looks like you haven't added any delicious treats yet!</p>
+            <a href="{% url 'core:products' %}" class="btn btn-primary">Start Shopping</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

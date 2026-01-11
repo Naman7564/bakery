@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}About Us{% endblock %}
+
+{% block content %}
+<section class="about-section">
+    <div class="container">
+        <div class="about-hero">
+            <div class="about-hero-content">
+                <h1 class="about-title">Our Story</h1>
+                <p class="about-lead">Bake with Love was born from a simple passion: creating moments of joy through the
+                    art of baking.</p>
+            </div>
+        </div>
+
+        <div class="about-content">
+            <div class="about-grid">
+                <div class="about-text">
+                    <h2>Handcrafted with Love Since 2010</h2>
+                    <p>What started as a small family kitchen has blossomed into a beloved bakery, serving thousands of
+                        happy customers with our signature freshly baked goods.</p>
+                    <p>Every morning, our skilled bakers arrive before dawn to prepare a fresh selection of artisan
+                        breads, delicate pastries, celebration cakes, and much more. We believe that the best baked
+                        goods come from using only the finest ingredients and time-honored techniques passed down
+                        through generations.</p>
+                </div>
+                <div class="about-image">
+                    <img src="{% static 'images/bakery-interior.jpg' %}" alt="Our Bakery">
+                </div>
+            </div>
+
+            <div class="values-section">
+                <h2 class="section-title text-center">What Makes Us Special</h2>
+                <div class="values-grid">
+                    <div class="value-card">
+                        <span class="value-icon">🌾</span>
+                        <h3>Quality Ingredients</h3>
+                        <p>We source only the finest flour, butter, and fresh produce to ensure every bite is perfect.
+                        </p>
+                    </div>
+                    <div class="value-card">
+                        <span class="value-icon">👨‍🍳</span>
+                        <h3>Expert Bakers</h3>
+                        <p>Our team of passionate bakers brings decades of combined experience to every creation.</p>
+                    </div>
+                    <div class="value-card">
+                        <span class="value-icon">❤️</span>
+                        <h3>Made with Love</h3>
+                        <p>Every item is handcrafted with care and attention, just like homemade.</p>
+                    </div>
+                    <div class="value-card">
+                        <span class="value-icon">🌍</span>
+                        <h3>Sustainability</h3>
+                        <p>We're committed to eco-friendly practices and supporting local suppliers.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="team-section">
+                <h2 class="section-title text-center">Meet Our Team</h2>
+                <p class="section-subtitle text-center">The passionate people behind your favorite treats</p>
+                <div class="team-grid">
+                    <div class="team-card">
+                        <div class="team-image">👨‍🍳</div>
+                        <h3>Chef Ramesh</h3>
+                        <p class="team-role">Head Baker</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-image">👩‍🍳</div>
+                        <h3>Priya Sharma</h3>
+                        <p class="team-role">Pastry Chef</p>
+                    </div>
+                    <div class="team-card">
+                        <div class="team-image">🧑‍🍳</div>
+                        <h3>Amit Kumar</h3>
+                        <p class="team-role">Cake Designer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

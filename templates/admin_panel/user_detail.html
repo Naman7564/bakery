@@ -1,0 +1,88 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>User Details</h1>
+        <nav class="admin-breadcrumb">
+            <a href="{% url 'admin_panel:users' %}">Users</a> / <span>{{ user_obj.email }}</span>
+        </nav>
+    </div>
+</div>
+
+<div class="user-detail-grid">
+    <div class="admin-card">
+        <div class="card-header">
+            <h3>User Information</h3>
+        </div>
+        <div class="card-body">
+            <div class="user-profile">
+                <div class="user-avatar-large">{{ user_obj.first_name|slice:":1"|upper }}{{
+                    user_obj.last_name|slice:":1"|upper }}</div>
+                <div class="user-info">
+                    <h2>{{ user_obj.full_name|default:user_obj.username }}</h2>
+                    <p>{{ user_obj.email }}</p>
+                </div>
+            </div>
+            <div class="user-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Username</span>
+                    <span class="meta-value">{{ user_obj.username }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Phone</span>
+                    <span class="meta-value">{{ user_obj.phone|default:"Not provided" }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Address</span>
+                    <span class="meta-value">{{ user_obj.address|default:"Not provided" }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Joined</span>
+                    <span class="meta-value">{{ user_obj.date_joined|date:"F d, Y" }}</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Total Orders</span>
+                    <span class="meta-value">{{ orders.count }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <div class="card-header">
+            <h3>Order History</h3>
+        </div>
+        <div class="card-body">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr>
+                        <td><a href="{% url 'admin_panel:order_detail' order_id=order.id %}">{{ order.order_number
+                                }}</a></td>
+                        <td>${{ order.total }}</td>
+                        <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="text-center">No orders</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

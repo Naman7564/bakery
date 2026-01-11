@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1 class="page-title">My Orders</h1>
+            <nav class="breadcrumb">
+                <a href="{% url 'dashboard:index' %}">Dashboard</a> / <span>Orders</span>
+            </nav>
+        </div>
+
+        <div class="dashboard-nav">
+            <a href="{% url 'dashboard:index' %}" class="dashboard-nav-link">Overview</a>
+            <a href="{% url 'dashboard:orders' %}" class="dashboard-nav-link active">My Orders</a>
+            <a href="{% url 'accounts:profile' %}" class="dashboard-nav-link">Profile</a>
+        </div>
+
+        <div class="orders-filter">
+            <a href="{% url 'dashboard:orders' %}"
+                class="filter-btn {% if not current_status %}active{% endif %}">All</a>
+            <a href="{% url 'dashboard:orders' %}?status=pending"
+                class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Pending</a>
+            <a href="{% url 'dashboard:orders' %}?status=confirmed"
+                class="filter-btn {% if current_status == 'confirmed' %}active{% endif %}">Confirmed</a>
+            <a href="{% url 'dashboard:orders' %}?status=preparing"
+                class="filter-btn {% if current_status == 'preparing' %}active{% endif %}">Preparing</a>
+            <a href="{% url 'dashboard:orders' %}?status=delivered"
+                class="filter-btn {% if current_status == 'delivered' %}active{% endif %}">Delivered</a>
+        </div>
+
+        <div class="orders-list">
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-info">
+                        <span class="order-number">{{ order.order_number }}</span>
+                        <span class="order-date">{{ order.created_at|date:"M d, Y - h:i A" }}</span>
+                    </div>
+                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+                <div class="order-items-preview">
+                    {% for item in order.items.all|slice:":3" %}
+                    <span class="order-item-name">{{ item.product_name }} x{{ item.quantity }}</span>
+                    {% endfor %}
+                    {% if order.items.count > 3 %}
+                    <span class="more-items">+{{ order.items.count|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+                <div class="order-footer">
+                    <span class="order-total">Total: <strong>${{ order.total }}</strong></span>
+                    <a href="{% url 'dashboard:order_detail' order_id=order.id %}" class="btn btn-outline btn-sm">View
+                        Details</a>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <span class="empty-icon">📦</span>
+                <h4>No orders found</h4>
+                <p>You haven't placed any orders yet.</p>
+                <a href="{% url 'core:products' %}" class="btn btn-primary">Start Shopping</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

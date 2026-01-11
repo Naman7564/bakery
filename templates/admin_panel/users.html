@@ -1,0 +1,59 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Users{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>Users</h1>
+        <p class="admin-page-subtitle">Manage customer accounts</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-header">
+        <form method="GET" class="search-form">
+            <input type="text" name="q" value="{{ search_query }}" placeholder="Search by email or username..."
+                class="admin-input">
+        </form>
+    </div>
+    <div class="card-body">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Joined</th>
+                    <th>Orders</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user_obj in users %}
+                <tr>
+                    <td>
+                        <div class="user-cell">
+                            <span class="user-avatar-sm">{{ user_obj.first_name|slice:":1"|upper }}{{
+                                user_obj.last_name|slice:":1"|upper }}</span>
+                            <strong>{{ user_obj.full_name|default:user_obj.username }}</strong>
+                        </div>
+                    </td>
+                    <td>{{ user_obj.email }}</td>
+                    <td>{{ user_obj.phone|default:"-" }}</td>
+                    <td>{{ user_obj.date_joined|date:"M d, Y" }}</td>
+                    <td>{{ user_obj.orders.count }}</td>
+                    <td>
+                        <a href="{% url 'admin_panel:user_detail' user_id=user_obj.id %}" class="btn btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center">No users found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="auth-container">
+        <div class="auth-card auth-card-large">
+            <div class="auth-header">
+                <span class="auth-icon">🍞</span>
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join our bakery family today</p>
+            </div>
+
+            <form method="POST" class="auth-form">
+                {% csrf_token %}
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_first_name" class="form-label">First Name</label>
+                        {{ form.first_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_last_name" class="form-label">Last Name</label>
+                        {{ form.last_name }}
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="id_email" class="form-label">Email *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <span class="form-error">{{ form.email.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="id_username" class="form-label">Username *</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <span class="form-error">{{ form.username.errors.0 }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="id_password1" class="form-label">Password *</label>
+                        {{ form.password1 }}
+                        {% if form.password1.errors %}
+                        <span class="form-error">{{ form.password1.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_password2" class="form-label">Confirm Password *</label>
+                        {{ form.password2 }}
+                        {% if form.password2.errors %}
+                        <span class="form-error">{{ form.password2.errors.0 }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if form.non_field_errors %}
+                <div class="form-errors">
+                    {% for error in form.non_field_errors %}
+                    <p class="form-error">{{ error }}</p>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <div class="form-options">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="terms" required>
+                        <span>I agree to the <a href="#">Terms & Conditions</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="{% url 'accounts:login' %}" class="auth-link">Sign in</a></p>
+            </div>
+        </div>
+
+        <div class="auth-image">
+            <div class="auth-image-overlay"></div>
+            <div class="auth-image-content">
+                <h2>Join Our Family</h2>
+                <p>Get exclusive offers, early access to new products, and more!</p>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

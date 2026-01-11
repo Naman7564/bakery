@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1 class="hero-title">Freshly Baked Delights, <span class="highlight">Every Day</span></h1>
+            <p class="hero-subtitle">Discover the magic of freshly baked goodness. Handcrafted with love and the finest
+                ingredients. Delight in every bite, every day.</p>
+            <div class="hero-buttons">
+                <a href="{% url 'core:products' %}" class="btn btn-primary">Shop Now</a>
+                <a href="{% url 'core:contact' %}" class="btn btn-outline">Find Our Store</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <div class="hero-image-container">
+                <div class="hero-blob"></div>
+                <img src="{% static 'images/hero-bread.png' %}" alt="Freshly baked bread basket" class="hero-img">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="section categories-section">
+    <div class="container">
+        <h2 class="section-title">Categories</h2>
+        <div class="categories-carousel">
+            {% for category in categories %}
+            <a href="{% url 'core:category_detail' slug=category.slug %}" class="category-card">
+                <div class="category-image">
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                    {% else %}
+                    <div class="category-placeholder">🍰</div>
+                    {% endif %}
+                </div>
+                <span class="category-name">{{ category.name }}</span>
+            </a>
+            {% empty %}
+            <div class="category-card">
+                <div class="category-image">
+                    <div class="category-placeholder">🎂</div>
+                </div>
+                <span class="category-name">Specials</span>
+            </div>
+            <div class="category-card">
+                <div class="category-image">
+                    <div class="category-placeholder">🍩</div>
+                </div>
+                <span class="category-name">Doughnuts</span>
+            </div>
+            <div class="category-card">
+                <div class="category-image">
+                    <div class="category-placeholder">🍪</div>
+                </div>
+                <span class="category-name">Cookies</span>
+            </div>
+            <div class="category-card">
+                <div class="category-image">
+                    <div class="category-placeholder">🎂</div>
+                </div>
+                <span class="category-name">Cakes</span>
+            </div>
+            <div class="category-card">
+                <div class="category-image">
+                    <div class="category-placeholder">🍞</div>
+                </div>
+                <span class="category-name">Breads</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section products-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">Most Loved</h2>
+            <a href="{% url 'core:products' %}" class="view-all-link">View All →</a>
+        </div>
+        <div class="products-grid">
+            {% for product in featured_products %}
+            <div class="product-card">
+                <a href="{% url 'core:product_detail' slug=product.slug %}" class="product-image-link">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="product-placeholder">🧁</div>
+                        {% endif %}
+                        {% if product.is_special %}
+                        <span class="product-badge badge-special">Special</span>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">${{ product.price }} <span class="product-weight">{% if product.weight
+                            %}({{ product.weight }}){% endif %}</span></p>
+                    <div class="product-rating">
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= product.rating %} <span class="star filled">★</span>
+                            {% else %}
+                            <span class="star">☆</span>
+                            {% endif %}
+                            {% endfor %}
+                    </div>
+                    <form action="{% url 'core:add_to_cart' product_id=product.id %}" method="POST"
+                        class="add-to-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <p class="no-products">No featured products yet. Check back soon!</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Special Offers -->
+{% if special_products %}
+<section class="section special-section">
+    <div class="container">
+        <div class="special-banner">
+            <div class="special-content">
+                <span class="special-label">🎄 Holiday Specials</span>
+                <h2 class="special-title">Christmas Cravings</h2>
+                <p class="special-desc">Celebrate the season with our festive treats and delightful creations.</p>
+                <a href="{% url 'core:products' %}?category=specials" class="btn btn-light">Explore Specials</a>
+            </div>
+            <div class="special-products">
+                {% for product in special_products|slice:":3" %}
+                <a href="{% url 'core:product_detail' slug=product.slug %}" class="special-product-card">
+                    <div class="special-product-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="product-placeholder">🎄</div>
+                        {% endif %}
+                    </div>
+                    <div class="special-product-info">
+                        <span class="special-product-name">{{ product.name }}</span>
+                        <span class="special-product-price">${{ product.price }}</span>
+                    </div>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- About Preview -->
+<section class="section about-preview-section">
+    <div class="container">
+        <div class="about-preview">
+            <div class="about-preview-image">
+                <img src="{% static 'images/baker.jpg' %}" alt="Our Baker at Work">
+                <div class="about-preview-overlay"></div>
+            </div>
+            <div class="about-preview-content">
+                <h2 class="section-title">See Magic Happen, Right Here In Our Bakery</h2>
+                <p>Step into our bakery and be captivated by the enchanting sight of our talented bakers in action. From
+                    the careful mixing of ingredients to the precise artistry of decorating, inviting you to witness the
+                    creation of our delectable delights right before your eyes.</p>
+                <a href="{% url 'core:about' %}" class="btn btn-outline">Read More →</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter -->
+<section class="section newsletter-section">
+    <div class="container">
+        <div class="newsletter-box">
+            <div class="newsletter-content">
+                <h3>Subscribe to Our Newsletter</h3>
+                <p>Get updates on new products, special offers, and baking tips!</p>
+            </div>
+            <form class="newsletter-form">
+                <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                <button type="submit" class="btn btn-primary">Subscribe</button>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

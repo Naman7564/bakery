@@ -1,0 +1,112 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <h1>Dashboard</h1>
+    <p class="admin-page-subtitle">Welcome back! Here's what's happening today.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card stat-revenue">
+        <div class="stat-icon">💰</div>
+        <div class="stat-info">
+            <span class="stat-value">${{ total_revenue|floatformat:2 }}</span>
+            <span class="stat-label">Total Revenue</span>
+        </div>
+    </div>
+    <div class="stat-card stat-orders">
+        <div class="stat-icon">📦</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_orders }}</span>
+            <span class="stat-label">Total Orders</span>
+        </div>
+    </div>
+    <div class="stat-card stat-pending">
+        <div class="stat-icon">⏳</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ pending_orders }}</span>
+            <span class="stat-label">Pending Orders</span>
+        </div>
+    </div>
+    <div class="stat-card stat-products">
+        <div class="stat-icon">🧁</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_products }}</span>
+            <span class="stat-label">Products</span>
+        </div>
+    </div>
+    <div class="stat-card stat-users">
+        <div class="stat-icon">👥</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ total_users }}</span>
+            <span class="stat-label">Customers</span>
+        </div>
+    </div>
+    <div class="stat-card stat-messages">
+        <div class="stat-icon">✉️</div>
+        <div class="stat-info">
+            <span class="stat-value">{{ new_messages }}</span>
+            <span class="stat-label">New Messages</span>
+        </div>
+    </div>
+</div>
+
+<div class="admin-grid">
+    <div class="admin-card">
+        <div class="card-header">
+            <h3>Recent Orders</h3>
+            <a href="{% url 'admin_panel:orders' %}" class="view-all">View All →</a>
+        </div>
+        <div class="card-body">
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Order #</th>
+                        <th>Customer</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in recent_orders %}
+                    <tr>
+                        <td><a href="{% url 'admin_panel:order_detail' order_id=order.id %}">{{ order.order_number
+                                }}</a></td>
+                        <td>{{ order.user.email }}</td>
+                        <td>${{ order.total }}</td>
+                        <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </td>
+                        <td>{{ order.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No orders yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="admin-card">
+        <div class="card-header">
+            <h3>Orders by Status</h3>
+        </div>
+        <div class="card-body">
+            <div class="status-list">
+                {% for status in orders_by_status %}
+                <div class="status-item">
+                    <span class="status-badge status-{{ status.status }}">{{ status.status|title }}</span>
+                    <span class="status-count">{{ status.count }}</span>
+                </div>
+                {% empty %}
+                <p class="text-muted">No orders data</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

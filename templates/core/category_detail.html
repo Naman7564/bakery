@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ category.name }}{% endblock %}
+
+{% block content %}
+<section class="page-section">
+    <div class="container">
+        <div class="category-header">
+            {% if category.image %}
+            <div class="category-banner" style="background-image: url('{{ category.image.url }}');">
+                <div class="category-banner-overlay">
+                    <h1 class="page-title">{{ category.name }}</h1>
+                    {% if category.description %}
+                    <p class="page-subtitle">{{ category.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+            {% else %}
+            <div class="page-header">
+                <h1 class="page-title">{{ category.name }}</h1>
+                {% if category.description %}
+                <p class="page-subtitle">{{ category.description }}</p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <div class="products-grid">
+            {% for product in products %}
+            <div class="product-card">
+                <a href="{% url 'core:product_detail' slug=product.slug %}" class="product-image-link">
+                    <div class="product-image">
+                        {% if product.image %}
+                        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                        {% else %}
+                        <div class="product-placeholder">🧁</div>
+                        {% endif %}
+                    </div>
+                </a>
+                <div class="product-info">
+                    <h3 class="product-name">{{ product.name }}</h3>
+                    <p class="product-price">${{ product.price }} {% if product.weight %}<span
+                            class="product-weight">({{ product.weight }})</span>{% endif %}</p>
+                    <div class="product-rating">
+                        {% for i in "12345" %}
+                        {% if forloop.counter <= product.rating %} <span class="star filled">★</span>
+                            {% else %}
+                            <span class="star">☆</span>
+                            {% endif %}
+                            {% endfor %}
+                    </div>
+                    <form action="{% url 'core:add_to_cart' product_id=product.id %}" method="POST"
+                        class="add-to-cart-form">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-add-cart">Add to Cart</button>
+                    </form>
+                </div>
+            </div>
+            {% empty %}
+            <div class="no-products">
+                <span class="no-products-icon">🍞</span>
+                <h3>No products in this category</h3>
+                <p>Check back soon for new additions!</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

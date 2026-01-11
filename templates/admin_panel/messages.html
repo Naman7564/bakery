@@ -1,0 +1,62 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>Messages</h1>
+        <p class="admin-page-subtitle">Contact form submissions</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-header">
+        <div class="filter-row">
+            <a href="{% url 'admin_panel:messages' %}"
+                class="filter-btn {% if not request.GET.unread %}active{% endif %}">All</a>
+            <a href="{% url 'admin_panel:messages' %}?unread=1"
+                class="filter-btn {% if request.GET.unread %}active{% endif %}">Unread</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>From</th>
+                    <th>Subject</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for msg in contact_messages %}
+                <tr class="{% if not msg.is_read %}unread{% endif %}">
+                    <td>
+                        <strong>{{ msg.name }}</strong><br>
+                        <small>{{ msg.email }}</small>
+                    </td>
+                    <td>{{ msg.subject }}</td>
+                    <td>{{ msg.created_at|date:"M d, Y H:i" }}</td>
+                    <td>
+                        {% if msg.is_read %}
+                        <span class="badge badge-muted">Read</span>
+                        {% else %}
+                        <span class="badge badge-success">New</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'admin_panel:message_detail' message_id=msg.id %}" class="btn btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="text-center">No messages</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

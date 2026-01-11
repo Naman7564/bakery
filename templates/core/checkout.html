@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout{% endblock %}
+
+{% block content %}
+<section class="checkout-section">
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Checkout</h1>
+            <nav class="breadcrumb">
+                <a href="{% url 'core:cart' %}">Cart</a> / <span>Checkout</span>
+            </nav>
+        </div>
+
+        <form method="POST" class="checkout-form">
+            {% csrf_token %}
+            <div class="checkout-layout">
+                <div class="checkout-details">
+                    <div class="checkout-section-card">
+                        <h3 class="checkout-section-title">Delivery Information</h3>
+
+                        <div class="form-group">
+                            <label class="form-label">Full Name</label>
+                            <input type="text" name="name" value="{{ user.full_name }}" class="form-input" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number *</label>
+                            <input type="tel" name="phone" value="{{ user.phone }}" class="form-input"
+                                placeholder="Enter your phone number" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Delivery Address *</label>
+                            <textarea name="address" class="form-input" rows="3"
+                                placeholder="Enter your full delivery address" required>{{ user.address }}</textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Order Notes (Optional)</label>
+                            <textarea name="notes" class="form-input" rows="2"
+                                placeholder="Any special instructions for your order"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="checkout-section-card">
+                        <h3 class="checkout-section-title">Payment Method</h3>
+                        <div class="payment-options">
+                            <label class="payment-option">
+                                <input type="radio" name="payment" value="cod" checked>
+                                <span class="payment-option-content">
+                                    <span class="payment-icon">💵</span>
+                                    <span class="payment-text">
+                                        <strong>Cash on Delivery</strong>
+                                        <small>Pay when you receive your order</small>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="checkout-summary">
+                    <div class="cart-summary-card">
+                        <h3 class="summary-title">Order Summary</h3>
+
+                        <div class="checkout-items">
+                            {% for item in cart.items.all %}
+                            <div class="checkout-item">
+                                <div class="checkout-item-image">
+                                    {% if item.product.image %}
+                                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                                    {% else %}
+                                    <div class="product-placeholder-sm">🧁</div>
+                                    {% endif %}
+                                </div>
+                                <div class="checkout-item-details">
+                                    <span class="checkout-item-name">{{ item.product.name }}</span>
+                                    <span class="checkout-item-qty">x{{ item.quantity }}</span>
+                                </div>
+                                <span class="checkout-item-price">${{ item.subtotal }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+
+                        <hr class="summary-divider">
+
+                        <div class="summary-row">
+                            <span>Subtotal ({{ cart.item_count }} items)</span>
+                            <span>${{ cart.total }}</span>
+                        </div>
+                        <div class="summary-row">
+                            <span>Delivery</span>
+                            <span class="free-delivery">Free</span>
+                        </div>
+                        <hr class="summary-divider">
+                        <div class="summary-row summary-total">
+                            <span>Total</span>
+                            <span>${{ cart.total }}</span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full btn-large">Place Order</button>
+                        <p class="checkout-note">By placing your order, you agree to our Terms & Conditions</p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

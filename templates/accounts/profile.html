@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="dashboard-header">
+            <h1 class="page-title">My Profile</h1>
+            <nav class="breadcrumb">
+                <a href="{% url 'dashboard:index' %}">Dashboard</a> / <span>Profile</span>
+            </nav>
+        </div>
+
+        <div class="profile-container">
+            <div class="profile-sidebar">
+                <div class="profile-avatar">
+                    {% if user.profile_image %}
+                    <img src="{{ user.profile_image.url }}" alt="{{ user.full_name }}">
+                    {% else %}
+                    <div class="avatar-placeholder">{{ user.first_name|slice:":1"|default:user.email|slice:":1"|upper }}
+                    </div>
+                    {% endif %}
+                </div>
+                <h2 class="profile-name">{{ user.full_name|default:user.username }}</h2>
+                <p class="profile-email">{{ user.email }}</p>
+                <p class="member-since">Member since {{ user.created_at|date:"F Y" }}</p>
+            </div>
+
+            <div class="profile-main">
+                <form method="POST" enctype="multipart/form-data" class="profile-form">
+                    {% csrf_token %}
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">Personal Information</h3>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">First Name</label>
+                                {{ form.first_name }}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Last Name</label>
+                                {{ form.last_name }}
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Phone Number</label>
+                            {{ form.phone }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Delivery Address</label>
+                            {{ form.address }}
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Profile Photo</label>
+                            {{ form.profile_image }}
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
+                        <a href="{% url 'dashboard:index' %}" class="btn btn-outline">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

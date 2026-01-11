@@ -1,0 +1,65 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>Orders</h1>
+        <p class="admin-page-subtitle">Manage customer orders</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-header">
+        <div class="orders-filter">
+            <a href="{% url 'admin_panel:orders' %}"
+                class="filter-btn {% if not current_status %}active{% endif %}">All</a>
+            <a href="{% url 'admin_panel:orders' %}?status=pending"
+                class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Pending</a>
+            <a href="{% url 'admin_panel:orders' %}?status=confirmed"
+                class="filter-btn {% if current_status == 'confirmed' %}active{% endif %}">Confirmed</a>
+            <a href="{% url 'admin_panel:orders' %}?status=preparing"
+                class="filter-btn {% if current_status == 'preparing' %}active{% endif %}">Preparing</a>
+            <a href="{% url 'admin_panel:orders' %}?status=ready"
+                class="filter-btn {% if current_status == 'ready' %}active{% endif %}">Ready</a>
+            <a href="{% url 'admin_panel:orders' %}?status=delivered"
+                class="filter-btn {% if current_status == 'delivered' %}active{% endif %}">Delivered</a>
+        </div>
+    </div>
+    <div class="card-body">
+        <table class="admin-table">
+            <thead>
+                <tr>
+                    <th>Order #</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr>
+                    <td><strong>{{ order.order_number }}</strong></td>
+                    <td>{{ order.user.email }}</td>
+                    <td>{{ order.items.count }} items</td>
+                    <td>${{ order.total }}</td>
+                    <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
+                    <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
+                    <td>
+                        <a href="{% url 'admin_panel:order_detail' order_id=order.id %}" class="btn btn-sm">View</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center">No orders found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
