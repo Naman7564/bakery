@@ -41,7 +41,7 @@ services:
       - DB_PASSWORD=bakery_password
       - DB_HOST=db
       - DB_PORT=5432
-      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,140.245.6.79,*
     depends_on:
       db:
         condition: service_healthy
