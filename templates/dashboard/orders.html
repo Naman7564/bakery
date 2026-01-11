@@ -3,65 +3,533 @@
 
 {% block title %}My Orders{% endblock %}
 
+{% block extra_css %}
+<style>
+    .orders-page {
+        padding: 40px 0 80px;
+        min-height: 80vh;
+    }
+
+    .orders-header {
+        margin-bottom: 30px;
+    }
+
+    .orders-header h1 {
+        font-family: var(--font-display);
+        font-size: 2.2rem;
+        margin-bottom: 8px;
+        color: var(--black);
+    }
+
+    .orders-header .breadcrumb {
+        color: var(--text-muted);
+        font-size: 0.9rem;
+    }
+
+    .orders-header .breadcrumb a {
+        color: var(--primary);
+    }
+
+    /* Modern Tab Navigation */
+    .orders-tabs {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 30px;
+        background: var(--white);
+        padding: 8px;
+        border-radius: 16px;
+        width: fit-content;
+        box-shadow: 0 2px 12px var(--shadow);
+    }
+
+    .tab-btn {
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--text-light);
+        transition: all 0.3s ease;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+    }
+
+    .tab-btn:hover {
+        background: var(--bg);
+        color: var(--text);
+    }
+
+    .tab-btn.active {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        box-shadow: 0 4px 15px rgba(198, 124, 78, 0.4);
+    }
+
+    /* Status Filter Pills */
+    .status-filters {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 25px;
+        flex-wrap: wrap;
+    }
+
+    .filter-pill {
+        padding: 8px 18px;
+        border-radius: 25px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        border: 2px solid var(--border);
+        color: var(--text-light);
+        background: var(--white);
+        transition: all 0.3s ease;
+    }
+
+    .filter-pill:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+    }
+
+    .filter-pill.active {
+        background: var(--primary);
+        border-color: var(--primary);
+        color: var(--white);
+    }
+
+    /* Modern Order Cards */
+    .orders-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .order-card-modern {
+        background: var(--white);
+        border-radius: 20px;
+        padding: 0;
+        overflow: hidden;
+        box-shadow: 0 4px 20px var(--shadow);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+    }
+
+    .order-card-modern:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 30px var(--shadow-lg);
+    }
+
+    .order-card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 25px;
+        background: linear-gradient(135deg, var(--bg) 0%, var(--white) 100%);
+        border-bottom: 1px solid var(--border);
+    }
+
+    .order-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .order-id {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: var(--black);
+        font-family: 'Courier New', monospace;
+    }
+
+    .order-date {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .order-date svg {
+        width: 14px;
+        height: 14px;
+    }
+
+    /* Modern Status Badge */
+    .status-pill {
+        padding: 8px 16px;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-pill::before {
+        content: '';
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.5;
+        }
+    }
+
+    .status-pill.pending {
+        background: rgba(255, 193, 7, 0.15);
+        color: #F59E0B;
+    }
+
+    .status-pill.pending::before {
+        background: #F59E0B;
+    }
+
+    .status-pill.confirmed {
+        background: rgba(59, 130, 246, 0.15);
+        color: #3B82F6;
+    }
+
+    .status-pill.confirmed::before {
+        background: #3B82F6;
+    }
+
+    .status-pill.preparing {
+        background: rgba(139, 92, 246, 0.15);
+        color: #8B5CF6;
+    }
+
+    .status-pill.preparing::before {
+        background: #8B5CF6;
+        animation: pulse 1s infinite;
+    }
+
+    .status-pill.ready {
+        background: rgba(16, 185, 129, 0.15);
+        color: #10B981;
+    }
+
+    .status-pill.ready::before {
+        background: #10B981;
+    }
+
+    .status-pill.delivered {
+        background: rgba(34, 197, 94, 0.15);
+        color: #22C55E;
+    }
+
+    .status-pill.delivered::before {
+        background: #22C55E;
+        animation: none;
+    }
+
+    .status-pill.cancelled {
+        background: rgba(239, 68, 68, 0.15);
+        color: #EF4444;
+    }
+
+    .status-pill.cancelled::before {
+        background: #EF4444;
+        animation: none;
+    }
+
+    /* Order Items */
+    .order-card-body {
+        padding: 20px 25px;
+    }
+
+    .order-items-list {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .order-item-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 15px;
+        background: var(--bg);
+        border-radius: 12px;
+    }
+
+    .item-details {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .item-icon {
+        width: 40px;
+        height: 40px;
+        background: var(--secondary);
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .item-name {
+        font-weight: 500;
+        color: var(--text);
+    }
+
+    .item-qty {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+    }
+
+    .item-price {
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .more-items-badge {
+        background: var(--secondary);
+        color: var(--primary);
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Order Footer */
+    .order-card-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 25px;
+        border-top: 1px solid var(--border);
+        background: var(--white);
+    }
+
+    .order-total {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+
+    .total-label {
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .total-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--black);
+    }
+
+    .view-details-btn {
+        padding: 12px 28px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .view-details-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(198, 124, 78, 0.4);
+    }
+
+    .view-details-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Empty State */
+    .empty-orders {
+        text-align: center;
+        padding: 80px 40px;
+        background: var(--white);
+        border-radius: 20px;
+        box-shadow: 0 4px 20px var(--shadow);
+    }
+
+    .empty-icon {
+        font-size: 4rem;
+        margin-bottom: 20px;
+    }
+
+    .empty-orders h3 {
+        font-size: 1.5rem;
+        margin-bottom: 10px;
+        color: var(--black);
+    }
+
+    .empty-orders p {
+        color: var(--text-muted);
+        margin-bottom: 25px;
+    }
+
+    /* Dashboard Navigation */
+    .dashboard-nav-modern {
+        display: flex;
+        gap: 5px;
+        margin-bottom: 30px;
+        background: var(--white);
+        padding: 6px;
+        border-radius: 14px;
+        width: fit-content;
+        box-shadow: 0 2px 10px var(--shadow);
+    }
+
+    .nav-tab {
+        padding: 10px 22px;
+        border-radius: 10px;
+        font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--text-light);
+        transition: all 0.3s ease;
+    }
+
+    .nav-tab:hover {
+        background: var(--bg);
+    }
+
+    .nav-tab.active {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    @media (max-width: 768px) {
+        .order-card-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .order-card-footer {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .view-details-btn {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .status-filters {
+            overflow-x: auto;
+            padding-bottom: 10px;
+            flex-wrap: nowrap;
+        }
+
+        .dashboard-nav-modern {
+            width: 100%;
+            overflow-x: auto;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="dashboard-section">
+<section class="orders-page">
     <div class="container">
-        <div class="dashboard-header">
-            <h1 class="page-title">My Orders</h1>
+        <div class="orders-header">
+            <h1>📦 My Orders</h1>
             <nav class="breadcrumb">
                 <a href="{% url 'dashboard:index' %}">Dashboard</a> / <span>Orders</span>
             </nav>
         </div>
 
-        <div class="dashboard-nav">
-            <a href="{% url 'dashboard:index' %}" class="dashboard-nav-link">Overview</a>
-            <a href="{% url 'dashboard:orders' %}" class="dashboard-nav-link active">My Orders</a>
-            <a href="{% url 'accounts:profile' %}" class="dashboard-nav-link">Profile</a>
+        <div class="dashboard-nav-modern">
+            <a href="{% url 'dashboard:index' %}" class="nav-tab">Overview</a>
+            <a href="{% url 'dashboard:orders' %}" class="nav-tab active">My Orders</a>
+            <a href="{% url 'accounts:profile' %}" class="nav-tab">Profile</a>
         </div>
 
-        <div class="orders-filter">
-            <a href="{% url 'dashboard:orders' %}"
-                class="filter-btn {% if not current_status %}active{% endif %}">All</a>
+        <div class="status-filters">
+            <a href="{% url 'dashboard:orders' %}" class="filter-pill {% if not current_status %}active{% endif %}">All
+                Orders</a>
             <a href="{% url 'dashboard:orders' %}?status=pending"
-                class="filter-btn {% if current_status == 'pending' %}active{% endif %}">Pending</a>
+                class="filter-pill {% if current_status == 'pending' %}active{% endif %}">⏳ Pending</a>
             <a href="{% url 'dashboard:orders' %}?status=confirmed"
-                class="filter-btn {% if current_status == 'confirmed' %}active{% endif %}">Confirmed</a>
+                class="filter-pill {% if current_status == 'confirmed' %}active{% endif %}">✓ Confirmed</a>
             <a href="{% url 'dashboard:orders' %}?status=preparing"
-                class="filter-btn {% if current_status == 'preparing' %}active{% endif %}">Preparing</a>
+                class="filter-pill {% if current_status == 'preparing' %}active{% endif %}">👨‍🍳 Preparing</a>
             <a href="{% url 'dashboard:orders' %}?status=delivered"
-                class="filter-btn {% if current_status == 'delivered' %}active{% endif %}">Delivered</a>
+                class="filter-pill {% if current_status == 'delivered' %}active{% endif %}">✅ Delivered</a>
         </div>
 
-        <div class="orders-list">
+        <div class="orders-grid">
             {% for order in orders %}
-            <div class="order-card">
-                <div class="order-header">
-                    <div class="order-info">
-                        <span class="order-number">{{ order.order_number }}</span>
-                        <span class="order-date">{{ order.created_at|date:"M d, Y - h:i A" }}</span>
+            <div class="order-card-modern">
+                <div class="order-card-header">
+                    <div class="order-meta">
+                        <span class="order-id">#{{ order.order_number }}</span>
+                        <span class="order-date">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                <line x1="16" y1="2" x2="16" y2="6"></line>
+                                <line x1="8" y1="2" x2="8" y2="6"></line>
+                                <line x1="3" y1="10" x2="21" y2="10"></line>
+                            </svg>
+                            {{ order.created_at|date:"M d, Y" }} at {{ order.created_at|time:"g:i A" }}
+                        </span>
                     </div>
-                    <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                    <span class="status-pill {{ order.status }}">{{ order.get_status_display }}</span>
                 </div>
-                <div class="order-items-preview">
-                    {% for item in order.items.all|slice:":3" %}
-                    <span class="order-item-name">{{ item.product_name }} x{{ item.quantity }}</span>
-                    {% endfor %}
-                    {% if order.items.count > 3 %}
-                    <span class="more-items">+{{ order.items.count|add:"-3" }} more</span>
-                    {% endif %}
+
+                <div class="order-card-body">
+                    <div class="order-items-list">
+                        {% for item in order.items.all|slice:":3" %}
+                        <div class="order-item-row">
+                            <div class="item-details">
+                                <span class="item-icon">🧁</span>
+                                <div>
+                                    <div class="item-name">{{ item.product_name }}</div>
+                                    <div class="item-qty">Qty: {{ item.quantity }}</div>
+                                </div>
+                            </div>
+                            <span class="item-price">${{ item.subtotal }}</span>
+                        </div>
+                        {% endfor %}
+                        {% if order.items.count > 3 %}
+                        <span class="more-items-badge">+ {{ order.items.count|add:"-3" }} more items</span>
+                        {% endif %}
+                    </div>
                 </div>
-                <div class="order-footer">
-                    <span class="order-total">Total: <strong>${{ order.total }}</strong></span>
-                    <a href="{% url 'dashboard:order_detail' order_id=order.id %}" class="btn btn-outline btn-sm">View
-                        Details</a>
+
+                <div class="order-card-footer">
+                    <div class="order-total">
+                        <span class="total-label">Total Amount</span>
+                        <span class="total-value">${{ order.total }}</span>
+                    </div>
+                    <a href="{% url 'dashboard:order_detail' order_id=order.id %}" class="view-details-btn">
+                        View Details
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
             </div>
             {% empty %}
-            <div class="empty-state">
+            <div class="empty-orders">
                 <span class="empty-icon">📦</span>
-                <h4>No orders found</h4>
-                <p>You haven't placed any orders yet.</p>
-                <a href="{% url 'core:products' %}" class="btn btn-primary">Start Shopping</a>
+                <h3>No orders yet</h3>
+                <p>Looks like you haven't placed any orders. Start exploring our delicious treats!</p>
+                <a href="{% url 'core:products' %}" class="btn btn-primary btn-large">Browse Products</a>
             </div>
             {% endfor %}
         </div>
