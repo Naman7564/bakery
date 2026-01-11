@@ -453,10 +453,24 @@
             </nav>
         </div>
 
-        <div class="dashboard-nav-modern">
-            <a href="{% url 'dashboard:index' %}" class="nav-tab">Overview</a>
-            <a href="{% url 'dashboard:orders' %}" class="nav-tab active">My Orders</a>
-            <a href="{% url 'accounts:profile' %}" class="nav-tab">Profile</a>
+        <div class="dashboard-tabs"
+            style="display:flex;gap:8px;margin-bottom:30px;background:white;padding:8px;border-radius:16px;width:fit-content;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+            <a href="{% url 'dashboard:index' %}" class="tab-link"
+                style="padding:12px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;color:#6B5A48;display:flex;align-items:center;gap:8px;">
+                <span>📊</span> Overview
+            </a>
+            <a href="{% url 'dashboard:orders' %}" class="tab-link active"
+                style="padding:12px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;background:linear-gradient(135deg,#C67C4E 0%,#A65F35 100%);color:white;box-shadow:0 4px 15px rgba(198,124,78,0.4);display:flex;align-items:center;gap:8px;">
+                <span>📦</span> My Orders
+            </a>
+            <a href="{% url 'accounts:profile' %}" class="tab-link"
+                style="padding:12px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;color:#6B5A48;display:flex;align-items:center;gap:8px;">
+                <span>👤</span> Profile
+            </a>
+            <a href="{% url 'accounts:logout' %}" class="tab-link"
+                style="padding:12px 24px;border-radius:12px;font-weight:500;font-size:0.95rem;color:#6B5A48;display:flex;align-items:center;gap:8px;">
+                <span>🚪</span> Logout
+            </a>
         </div>
 
         <div class="status-filters">
