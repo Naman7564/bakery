@@ -101,11 +101,13 @@
                 </a>
                 <div class="product-info">
                     <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">${{ product.price }} {% if product.weight %}<span class="product-weight">({{ product.weight }})</span>{% endif %}</p>
+                    <p class="product-price">${{ product.price }} {% if product.weight %}<span
+                            class="product-weight">({{ product.weight }})</span>{% endif %}</p>
                     <div class="product-rating">
                         {% for i in "12345" %}
-                            {% if forloop.counter <= product.rating %}<span class="star filled">★</span>{% else %}<span class="star">☆</span>{% endif %}
-                        {% endfor %}
+                        {% if forloop.counter <= product.rating %}<span class="star filled">★</span>{% else %}<span
+                                class="star">☆</span>{% endif %}
+                            {% endfor %}
                     </div>
                     <form action="{% url 'core:add_to_cart' product_id=product.id %}" method="POST"
                         class="add-to-cart-form">
@@ -158,10 +160,7 @@
 <section class="section about-preview-section">
     <div class="container">
         <div class="about-preview">
-            <div class="about-preview-image">
-                <img src="{% static 'images/baker.jpg' %}" alt="Our Baker at Work">
-                <div class="about-preview-overlay"></div>
-            </div>
+
             <div class="about-preview-content">
                 <h2 class="section-title">See Magic Happen, Right Here In Our Bakery</h2>
                 <p>Step into our bakery and be captivated by the enchanting sight of our talented bakers in action. From
