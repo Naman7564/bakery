@@ -101,15 +101,11 @@
                 </a>
                 <div class="product-info">
                     <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">${{ product.price }} <span class="product-weight">{% if product.weight
-                            %}({{ product.weight }}){% endif %}</span></p>
+                    <p class="product-price">${{ product.price }} {% if product.weight %}<span class="product-weight">({{ product.weight }})</span>{% endif %}</p>
                     <div class="product-rating">
                         {% for i in "12345" %}
-                        {% if forloop.counter <= product.rating %} <span class="star filled">★</span>
-                            {% else %}
-                            <span class="star">☆</span>
-                            {% endif %}
-                            {% endfor %}
+                            {% if forloop.counter <= product.rating %}<span class="star filled">★</span>{% else %}<span class="star">☆</span>{% endif %}
+                        {% endfor %}
                     </div>
                     <form action="{% url 'core:add_to_cart' product_id=product.id %}" method="POST"
                         class="add-to-cart-form">
