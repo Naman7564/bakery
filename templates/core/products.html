@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Products{% endblock %}
@@ -22,7 +22,7 @@
                         {% for category in categories %}
                         <li><a href="{% url 'core:products' %}?category={{ category.slug }}"
                                 class="filter-link {% if current_category == category.slug %}active{% endif %}">{{
-                                category.name }}</a></li>
+                                category.name|title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
@@ -58,7 +58,7 @@
                         <div class="product-info">
                             <span class="product-category">{{ product.category.name }}</span>
                             <h3 class="product-name">{{ product.name }}</h3>
-                            <p class="product-price">${{ product.price }} {% if product.weight %}<span
+                            <p class="product-price">₹{{ product.price }} {% if product.weight %}<span
                                     class="product-weight">({{ product.weight }})</span>{% endif %}</p>
                             <div class="product-rating">
                                 {% for i in "12345" %}
