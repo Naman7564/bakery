@@ -3,80 +3,559 @@
 
 {% block title %}Order #{{ order.order_number }}{% endblock %}
 
+{% block extra_css %}
+<style>
+    .order-detail-modern {
+        padding: 60px 0 100px;
+        background: linear-gradient(180deg, #FDF8F3 0%, #F5E6D3 100%);
+        min-height: 100vh;
+    }
+
+    .order-header {
+        margin-bottom: 40px;
+    }
+
+    .order-header h1 {
+        font-family: 'Playfair Display', serif;
+        font-size: 2.2rem;
+        color: #1A0F05;
+        margin-bottom: 10px;
+    }
+
+    .order-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+        color: #9B8A78;
+    }
+
+    .order-breadcrumb a {
+        color: #C67C4E;
+    }
+
+    .order-breadcrumb a:hover {
+        text-decoration: underline;
+    }
+
+    .order-grid {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 30px;
+        align-items: start;
+    }
+
+    /* Main Card */
+    .order-main-card {
+        background: white;
+        border-radius: 24px;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        border: 1px solid rgba(232, 221, 209, 0.5);
+    }
+
+    .order-main-header {
+        background: linear-gradient(135deg, #C67C4E 0%, #A65F35 100%);
+        padding: 30px;
+        color: white;
+    }
+
+    .order-number {
+        font-family: 'Courier New', monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .order-time {
+        opacity: 0.9;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .order-time svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    /* Status Badge */
+    .status-badge-modern {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-top: 15px;
+    }
+
+    .status-badge-modern::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+        0%,
+        100% {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        50% {
+            opacity: 0.6;
+            transform: scale(0.9);
+        }
+    }
+
+    .status-pending {
+        background: rgba(255, 193, 7, 0.2);
+        color: #B45309;
+    }
+
+    .status-pending::before {
+        background: #F59E0B;
+    }
+
+    .status-confirmed {
+        background: rgba(59, 130, 246, 0.2);
+        color: #1D4ED8;
+    }
+
+    .status-confirmed::before {
+        background: #3B82F6;
+    }
+
+    .status-preparing {
+        background: rgba(139, 92, 246, 0.2);
+        color: #6D28D9;
+    }
+
+    .status-preparing::before {
+        background: #8B5CF6;
+    }
+
+    .status-ready {
+        background: rgba(16, 185, 129, 0.2);
+        color: #047857;
+    }
+
+    .status-ready::before {
+        background: #10B981;
+    }
+
+    .status-delivered {
+        background: rgba(34, 197, 94, 0.2);
+        color: #15803D;
+    }
+
+    .status-delivered::before {
+        background: #22C55E;
+        animation: none;
+    }
+
+    .status-cancelled {
+        background: rgba(239, 68, 68, 0.2);
+        color: #B91C1C;
+    }
+
+    .status-cancelled::before {
+        background: #EF4444;
+        animation: none;
+    }
+
+    /* Order Items */
+    .order-items-section {
+        padding: 30px;
+    }
+
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: 'Playfair Display', serif;
+        font-size: 1.3rem;
+        color: #1A0F05;
+        margin-bottom: 20px;
+    }
+
+    .section-title span {
+        font-size: 1.4rem;
+    }
+
+    .order-item-card {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        padding: 15px;
+        background: #FDFBF9;
+        border-radius: 16px;
+        margin-bottom: 12px;
+        border: 1px solid #F5E6D3;
+    }
+
+    .item-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #F5E6D3 0%, #E8DDD1 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+    }
+
+    .item-details {
+        flex: 1;
+    }
+
+    .item-name {
+        font-weight: 600;
+        color: #1A0F05;
+        font-size: 1rem;
+        margin-bottom: 4px;
+    }
+
+    .item-qty {
+        font-size: 0.85rem;
+        color: #9B8A78;
+    }
+
+    .item-price {
+        font-weight: 700;
+        font-size: 1.1rem;
+        color: #C67C4E;
+    }
+
+    /* Totals */
+    .order-totals {
+        background: #FDFBF9;
+        padding: 25px 30px;
+        border-top: 2px dashed #E8DDD1;
+    }
+
+    .total-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        color: #6B5A48;
+    }
+
+    .total-row.final {
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 2px solid #E8DDD1;
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1A0F05;
+    }
+
+    .free-tag {
+        background: #22C55E;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    /* Sidebar Cards */
+    .sidebar-card {
+        background: white;
+        border-radius: 20px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(232, 221, 209, 0.5);
+    }
+
+    .sidebar-card-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 2px solid #F5E6D3;
+    }
+
+    .sidebar-card-icon {
+        width: 42px;
+        height: 42px;
+        background: linear-gradient(135deg, #C67C4E 0%, #A65F35 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+
+    .sidebar-card-title {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.1rem;
+        color: #1A0F05;
+        margin: 0;
+    }
+
+    .sidebar-card p {
+        color: #6B5A48;
+        line-height: 1.6;
+        margin: 0 0 8px;
+    }
+
+    .sidebar-card .highlight {
+        font-weight: 600;
+        color: #1A0F05;
+    }
+
+    .contact-btn {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #C67C4E 0%, #A65F35 100%);
+        color: white;
+        border: none;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        box-shadow: 0 4px 15px rgba(198, 124, 78, 0.3);
+        margin-top: 15px;
+    }
+
+    .contact-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(198, 124, 78, 0.4);
+    }
+
+    /* Track Order Progress */
+    .progress-tracker {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 15px;
+    }
+
+    .progress-step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        flex: 1;
+        position: relative;
+    }
+
+    .progress-step::before {
+        content: '';
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        width: 100%;
+        height: 3px;
+        background: #E8DDD1;
+        z-index: 0;
+    }
+
+    .progress-step:last-child::before {
+        display: none;
+    }
+
+    .progress-dot {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: #E8DDD1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .progress-step.completed .progress-dot {
+        background: #22C55E;
+        color: white;
+    }
+
+    .progress-step.active .progress-dot {
+        background: linear-gradient(135deg, #C67C4E 0%, #A65F35 100%);
+        color: white;
+        box-shadow: 0 0 0 4px rgba(198, 124, 78, 0.2);
+    }
+
+    .progress-step.completed::before {
+        background: #22C55E;
+    }
+
+    .progress-label {
+        font-size: 0.75rem;
+        color: #9B8A78;
+        text-align: center;
+    }
+
+    .progress-step.completed .progress-label,
+    .progress-step.active .progress-label {
+        color: #1A0F05;
+        font-weight: 500;
+    }
+
+    @media (max-width: 992px) {
+        .order-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .order-detail-modern {
+            padding: 40px 0 80px;
+        }
+
+        .order-header h1 {
+            font-size: 1.8rem;
+        }
+
+        .progress-label {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block content %}
-<section class="dashboard-section">
+<section class="order-detail-modern">
     <div class="container">
-        <div class="dashboard-header">
-            <h1 class="page-title">Order Details</h1>
-            <nav class="breadcrumb">
-                <a href="{% url 'dashboard:index' %}">Dashboard</a> /
-                <a href="{% url 'dashboard:orders' %}">Orders</a> /
+        <div class="order-header">
+            <h1>📦 Order Details</h1>
+            <nav class="order-breadcrumb">
+                <a href="{% url 'dashboard:index' %}">Dashboard</a>
+                <span>/</span>
+                <a href="{% url 'dashboard:orders' %}">Orders</a>
+                <span>/</span>
                 <span>{{ order.order_number }}</span>
             </nav>
         </div>
 
-        <div class="order-detail-layout">
-            <div class="order-detail-main">
-                <div class="order-detail-card">
-                    <div class="order-detail-header">
-                        <div>
-                            <h2>{{ order.order_number }}</h2>
-                            <p class="order-date">Placed on {{ order.created_at|date:"F d, Y" }} at {{
-                                order.created_at|time:"h:i A" }}</p>
-                        </div>
-                        <span class="status-badge status-{{ order.status }} status-large">{{ order.get_status_display
-                            }}</span>
+        <div class="order-grid">
+            <div class="order-main-card">
+                <div class="order-main-header">
+                    <div class="order-number">#{{ order.order_number }}</div>
+                    <div class="order-time">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                        Placed on {{ order.created_at|date:"F d, Y" }} at {{ order.created_at|time:"h:i A" }}
                     </div>
+                    <span class="status-badge-modern status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
 
-                    <div class="order-items-list">
-                        <h3>Order Items</h3>
-                        {% for item in order.items.all %}
-                        <div class="order-item">
-                            <div class="order-item-info">
-                                <span class="item-name">{{ item.product_name }}</span>
-                                <span class="item-qty">x{{ item.quantity }}</span>
-                            </div>
-                            <span class="item-price">₹{{ item.subtotal }}</span>
+                <div class="order-items-section">
+                    <h3 class="section-title"><span>🧁</span> Order Items</h3>
+
+                    {% for item in order.items.all %}
+                    <div class="order-item-card">
+                        <div class="item-icon">🍰</div>
+                        <div class="item-details">
+                            <div class="item-name">{{ item.product_name }}</div>
+                            <div class="item-qty">Quantity: {{ item.quantity }}</div>
                         </div>
-                        {% endfor %}
+                        <div class="item-price">₹{{ item.subtotal }}</div>
                     </div>
+                    {% endfor %}
+                </div>
 
-                    <div class="order-summary-section">
-                        <div class="summary-row">
-                            <span>Subtotal</span>
-                            <span>₹{{ order.total }}</span>
-                        </div>
-                        <div class="summary-row">
-                            <span>Delivery</span>
-                            <span>Free</span>
-                        </div>
-                        <hr>
-                        <div class="summary-row summary-total">
-                            <span>Total</span>
-                            <span>₹{{ order.total }}</span>
-                        </div>
+                <div class="order-totals">
+                    <div class="total-row">
+                        <span>Subtotal</span>
+                        <span>₹{{ order.total }}</span>
+                    </div>
+                    <div class="total-row">
+                        <span>Delivery</span>
+                        <span class="free-tag">FREE</span>
+                    </div>
+                    <div class="total-row final">
+                        <span>Total</span>
+                        <span>₹{{ order.total }}</span>
                     </div>
                 </div>
             </div>
 
-            <div class="order-detail-sidebar">
-                <div class="info-card">
-                    <h3>Delivery Address</h3>
+            <div class="order-sidebar">
+                <!-- Order Status Progress -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-card-icon">📋</div>
+                        <h3 class="sidebar-card-title">Order Progress</h3>
+                    </div>
+                    <div class="progress-tracker">
+                        <div
+                            class="progress-step {% if order.status == 'pending' %}active{% elif order.status != 'cancelled' %}completed{% endif %}">
+                            <div class="progress-dot">1</div>
+                            <span class="progress-label">Placed</span>
+                        </div>
+                        <div
+                            class="progress-step {% if order.status == 'confirmed' %}active{% elif order.status in 'preparing,ready,delivered' %}completed{% endif %}">
+                            <div class="progress-dot">2</div>
+                            <span class="progress-label">Confirmed</span>
+                        </div>
+                        <div
+                            class="progress-step {% if order.status == 'preparing' %}active{% elif order.status in 'ready,delivered' %}completed{% endif %}">
+                            <div class="progress-dot">3</div>
+                            <span class="progress-label">Preparing</span>
+                        </div>
+                        <div class="progress-step {% if order.status == 'delivered' %}active completed{% endif %}">
+                            <div class="progress-dot">✓</div>
+                            <span class="progress-label">Delivered</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Delivery Address -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-card-icon">📍</div>
+                        <h3 class="sidebar-card-title">Delivery Address</h3>
+                    </div>
                     <p>{{ order.address }}</p>
-                    <p><strong>Phone:</strong> {{ order.phone }}</p>
+                    <p><span class="highlight">Phone:</span> {{ order.phone }}</p>
                 </div>
 
                 {% if order.notes %}
-                <div class="info-card">
-                    <h3>Order Notes</h3>
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-card-icon">📝</div>
+                        <h3 class="sidebar-card-title">Order Notes</h3>
+                    </div>
                     <p>{{ order.notes }}</p>
                 </div>
                 {% endif %}
 
-                <div class="info-card">
-                    <h3>Need Help?</h3>
-                    <p>Contact us for any questions about your order.</p>
-                    <a href="{% url 'core:contact' %}" class="btn btn-outline btn-full">Contact Support</a>
+                <!-- Need Help -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-header">
+                        <div class="sidebar-card-icon">💬</div>
+                        <h3 class="sidebar-card-title">Need Help?</h3>
+                    </div>
+                    <p>Have questions about your order? We're here to help!</p>
+                    <a href="{% url 'core:contact' %}" class="contact-btn">
+                        Contact Support
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M5 12h14M12 5l7 7-7 7" />
+                        </svg>
+                    </a>
                 </div>
             </div>
         </div>
