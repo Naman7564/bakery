@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Dashboard{% endblock %}
@@ -61,7 +61,7 @@
                                     <td>{{ order.created_at|date:"M d, Y" }}</td>
                                     <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display
                                             }}</span></td>
-                                    <td>${{ order.total }}</td>
+                                    <td>₹{{ order.total }}</td>
                                     <td><a href="{% url 'dashboard:order_detail' order_id=order.id %}"
                                             class="btn btn-sm">View</a></td>
                                 </tr>

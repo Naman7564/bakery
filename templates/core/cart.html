@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Shopping Cart{% endblock %}
@@ -27,7 +27,7 @@
                     <div class="cart-item-details">
                         <h3 class="cart-item-name">{{ item.product.name }}</h3>
                         <p class="cart-item-category">{{ item.product.category.name }}</p>
-                        <p class="cart-item-price">${{ item.product.price }}</p>
+                        <p class="cart-item-price">₹{{ item.product.price }}</p>
                     </div>
                     <div class="cart-item-quantity">
                         <form action="{% url 'core:update_cart' item_id=item.id %}" method="POST" class="quantity-form">
@@ -39,7 +39,7 @@
                     </div>
                     <div class="cart-item-subtotal">
                         <span class="subtotal-label">Subtotal</span>
-                        <span class="subtotal-value">${{ item.subtotal }}</span>
+                        <span class="subtotal-value">₹{{ item.subtotal }}</span>
                     </div>
                     <form action="{% url 'core:remove_from_cart' item_id=item.id %}" method="POST" class="remove-form">
                         {% csrf_token %}
@@ -62,7 +62,7 @@
                     <h3 class="summary-title">Order Summary</h3>
                     <div class="summary-row">
                         <span>Subtotal</span>
-                        <span class="cart-subtotal">${{ cart.total }}</span>
+                        <span class="cart-subtotal">₹{{ cart.total }}</span>
                     </div>
                     <div class="summary-row">
                         <span>Delivery</span>
@@ -71,7 +71,7 @@
                     <hr class="summary-divider">
                     <div class="summary-row summary-total">
                         <span>Total</span>
-                        <span class="cart-total">${{ cart.total }}</span>
+                        <span class="cart-total">₹{{ cart.total }}</span>
                     </div>
                     <a href="{% url 'core:checkout' %}" class="btn btn-primary btn-full">Proceed to Checkout</a>
                     <a href="{% url 'core:products' %}" class="btn btn-outline btn-full">Continue Shopping</a>

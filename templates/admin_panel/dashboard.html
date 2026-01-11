@@ -1,4 +1,4 @@
-{% extends 'admin_panel/base.html' %}
+﻿{% extends 'admin_panel/base.html' %}
 
 {% block title %}Dashboard{% endblock %}
 
@@ -12,7 +12,7 @@
     <div class="stat-card stat-revenue">
         <div class="stat-icon">💰</div>
         <div class="stat-info">
-            <span class="stat-value">${{ total_revenue|floatformat:2 }}</span>
+            <span class="stat-value">₹{{ total_revenue|floatformat:2 }}</span>
             <span class="stat-label">Total Revenue</span>
         </div>
     </div>
@@ -76,7 +76,7 @@
                         <td><a href="{% url 'admin_panel:order_detail' order_id=order.id %}">{{ order.order_number
                                 }}</a></td>
                         <td>{{ order.user.email }}</td>
-                        <td>${{ order.total }}</td>
+                        <td>₹{{ order.total }}</td>
                         <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
                         </td>
                         <td>{{ order.created_at|date:"M d, Y" }}</td>

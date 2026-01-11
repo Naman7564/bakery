@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Home{% endblock %}
@@ -100,7 +100,7 @@
                 </a>
                 <div class="product-info">
                     <h3 class="product-name">{{ product.name }}</h3>
-                    <p class="product-price">${{ product.price }} {% if product.weight %}<span
+                    <p class="product-price">₹{{ product.price }} {% if product.weight %}<span
                             class="product-weight">({{ product.weight }})</span>{% endif %}</p>
                     <div class="product-rating">
                         {% for i in "12345" %}
@@ -145,7 +145,7 @@
                     </div>
                     <div class="special-product-info">
                         <span class="special-product-name">{{ product.name }}</span>
-                        <span class="special-product-price">${{ product.price }}</span>
+                        <span class="special-product-price">₹{{ product.price }}</span>
                     </div>
                 </a>
                 {% endfor %}

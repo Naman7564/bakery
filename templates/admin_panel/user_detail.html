@@ -1,4 +1,4 @@
-{% extends 'admin_panel/base.html' %}
+﻿{% extends 'admin_panel/base.html' %}
 
 {% block title %}User Details{% endblock %}
 
@@ -70,7 +70,7 @@
                     <tr>
                         <td><a href="{% url 'admin_panel:order_detail' order_id=order.id %}">{{ order.order_number
                                 }}</a></td>
-                        <td>${{ order.total }}</td>
+                        <td>₹{{ order.total }}</td>
                         <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
                         </td>
                         <td>{{ order.created_at|date:"M d, Y" }}</td>

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}My Orders{% endblock %}
@@ -502,7 +502,7 @@
                                     <div class="item-qty">Qty: {{ item.quantity }}</div>
                                 </div>
                             </div>
-                            <span class="item-price">${{ item.subtotal }}</span>
+                            <span class="item-price">₹{{ item.subtotal }}</span>
                         </div>
                         {% endfor %}
                         {% if order.items.count > 3 %}
@@ -514,7 +514,7 @@
                 <div class="order-card-footer">
                     <div class="order-total">
                         <span class="total-label">Total Amount</span>
-                        <span class="total-value">${{ order.total }}</span>
+                        <span class="total-value">₹{{ order.total }}</span>
                     </div>
                     <a href="{% url 'dashboard:order_detail' order_id=order.id %}" class="view-details-btn">
                         View Details

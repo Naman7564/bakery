@@ -1,4 +1,4 @@
-{% extends 'admin_panel/base.html' %}
+﻿{% extends 'admin_panel/base.html' %}
 
 {% block title %}Order #{{ order.order_number }}{% endblock %}
 
@@ -30,7 +30,7 @@
                 </div>
                 <div class="meta-item">
                     <span class="meta-label">Total</span>
-                    <span class="meta-value">${{ order.total }}</span>
+                    <span class="meta-value">₹{{ order.total }}</span>
                 </div>
             </div>
 
@@ -48,16 +48,16 @@
                     {% for item in order.items.all %}
                     <tr>
                         <td>{{ item.product_name }}</td>
-                        <td>${{ item.price }}</td>
+                        <td>₹{{ item.price }}</td>
                         <td>{{ item.quantity }}</td>
-                        <td>${{ item.subtotal }}</td>
+                        <td>₹{{ item.subtotal }}</td>
                     </tr>
                     {% endfor %}
                 </tbody>
                 <tfoot>
                     <tr>
                         <td colspan="3"><strong>Total</strong></td>
-                        <td><strong>${{ order.total }}</strong></td>
+                        <td><strong>₹{{ order.total }}</strong></td>
                     </tr>
                 </tfoot>
             </table>

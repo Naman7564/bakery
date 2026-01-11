@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Checkout{% endblock %}
@@ -79,7 +79,7 @@
                                     <span class="checkout-item-name">{{ item.product.name }}</span>
                                     <span class="checkout-item-qty">x{{ item.quantity }}</span>
                                 </div>
-                                <span class="checkout-item-price">${{ item.subtotal }}</span>
+                                <span class="checkout-item-price">₹{{ item.subtotal }}</span>
                             </div>
                             {% endfor %}
                         </div>
@@ -88,7 +88,7 @@
 
                         <div class="summary-row">
                             <span>Subtotal ({{ cart.item_count }} items)</span>
-                            <span>${{ cart.total }}</span>
+                            <span>₹{{ cart.total }}</span>
                         </div>
                         <div class="summary-row">
                             <span>Delivery</span>
@@ -97,7 +97,7 @@
                         <hr class="summary-divider">
                         <div class="summary-row summary-total">
                             <span>Total</span>
-                            <span>${{ cart.total }}</span>
+                            <span>₹{{ cart.total }}</span>
                         </div>
 
                         <button type="submit" class="btn btn-primary btn-full btn-large">Place Order</button>

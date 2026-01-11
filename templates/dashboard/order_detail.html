@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+﻿{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Order #{{ order.order_number }}{% endblock %}
@@ -36,7 +36,7 @@
                                 <span class="item-name">{{ item.product_name }}</span>
                                 <span class="item-qty">x{{ item.quantity }}</span>
                             </div>
-                            <span class="item-price">${{ item.subtotal }}</span>
+                            <span class="item-price">₹{{ item.subtotal }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -44,7 +44,7 @@
                     <div class="order-summary-section">
                         <div class="summary-row">
                             <span>Subtotal</span>
-                            <span>${{ order.total }}</span>
+                            <span>₹{{ order.total }}</span>
                         </div>
                         <div class="summary-row">
                             <span>Delivery</span>
@@ -53,7 +53,7 @@
                         <hr>
                         <div class="summary-row summary-total">
                             <span>Total</span>
-                            <span>${{ order.total }}</span>
+                            <span>₹{{ order.total }}</span>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-{% extends 'admin_panel/base.html' %}
+﻿{% extends 'admin_panel/base.html' %}
 
 {% block title %}Orders{% endblock %}
 
@@ -46,7 +46,7 @@
                     <td><strong>{{ order.order_number }}</strong></td>
                     <td>{{ order.user.email }}</td>
                     <td>{{ order.items.count }} items</td>
-                    <td>${{ order.total }}</td>
+                    <td>₹{{ order.total }}</td>
                     <td><span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span></td>
                     <td>{{ order.created_at|date:"M d, Y H:i" }}</td>
                     <td>
