@@ -41,8 +41,8 @@ services:
       - DB_PASSWORD=bakery_password
       - DB_HOST=db
       - DB_PORT=5432
-      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,140.245.6.79,*
-      - CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,http://140.245.6.79:8000,http://140.245.6.79
+      - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0,140.245.6.79,bakewithlove.withaspire.in,*
+      - CSRF_TRUSTED_ORIGINS=http://localhost:8000,http://127.0.0.1:8000,http://140.245.6.79:8000,http://140.245.6.79,http://bakewithlove.withaspire.in,https://bakewithlove.withaspire.in
     depends_on:
       db:
         condition: service_healthy
