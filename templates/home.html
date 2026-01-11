@@ -172,19 +172,210 @@
     </div>
 </section>
 
-<!-- Newsletter -->
-<section class="section newsletter-section">
+<!-- Newsletter - Modern Design -->
+<section class="newsletter-modern">
+    <div class="newsletter-bg">
+        <div class="floating-shape shape-1">🍰</div>
+        <div class="floating-shape shape-2">🧁</div>
+        <div class="floating-shape shape-3">🍪</div>
+        <div class="floating-shape shape-4">🎂</div>
+    </div>
     <div class="container">
-        <div class="newsletter-box">
-            <div class="newsletter-content">
-                <h3>Subscribe to Our Newsletter</h3>
-                <p>Get updates on new products, special offers, and baking tips!</p>
-            </div>
-            <form class="newsletter-form">
-                <input type="email" placeholder="Enter your email" class="newsletter-input" required>
-                <button type="submit" class="btn btn-primary">Subscribe</button>
+        <div class="newsletter-card">
+            <div class="newsletter-icon">✉️</div>
+            <h2 class="newsletter-title">Stay in the Loop!</h2>
+            <p class="newsletter-desc">Be the first to know about fresh arrivals, exclusive offers, and delicious baking tips delivered straight to your inbox.</p>
+            <form class="newsletter-form-modern">
+                <div class="input-wrapper">
+                    <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                        <polyline points="22,6 12,13 2,6"></polyline>
+                    </svg>
+                    <input type="email" placeholder="Enter your email address" class="email-input-modern" required>
+                </div>
+                <button type="submit" class="subscribe-btn">
+                    <span>Subscribe Now</span>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </button>
             </form>
+            <p class="newsletter-privacy">🔒 We respect your privacy. Unsubscribe anytime.</p>
         </div>
     </div>
 </section>
+
+<style>
+.newsletter-modern {
+    position: relative;
+    padding: 100px 0;
+    background: linear-gradient(135deg, #C67C4E 0%, #8B4513 50%, #A65F35 100%);
+    overflow: hidden;
+}
+
+.newsletter-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+.floating-shape {
+    position: absolute;
+    font-size: 3rem;
+    opacity: 0.15;
+    animation: floatShape 6s ease-in-out infinite;
+}
+
+.shape-1 { top: 10%; left: 5%; animation-delay: 0s; }
+.shape-2 { top: 20%; right: 10%; animation-delay: 1.5s; }
+.shape-3 { bottom: 15%; left: 15%; animation-delay: 3s; }
+.shape-4 { bottom: 25%; right: 5%; animation-delay: 4.5s; }
+
+@keyframes floatShape {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+.newsletter-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border-radius: 30px;
+    padding: 60px;
+    max-width: 650px;
+    margin: 0 auto;
+    text-align: center;
+    box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+}
+
+.newsletter-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    display: block;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.newsletter-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1A0F05;
+    margin-bottom: 15px;
+}
+
+.newsletter-desc {
+    color: #6B5A48;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    margin-bottom: 35px;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.newsletter-form-modern {
+    display: flex;
+    gap: 15px;
+    max-width: 500px;
+    margin: 0 auto 20px;
+}
+
+.input-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.input-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 22px;
+    height: 22px;
+    color: #9B8A78;
+}
+
+.email-input-modern {
+    width: 100%;
+    padding: 18px 20px 18px 55px;
+    border: 2px solid #E8DDD1;
+    border-radius: 16px;
+    font-size: 1rem;
+    background: #FDF8F3;
+    transition: all 0.3s ease;
+    color: #2D2013;
+}
+
+.email-input-modern:focus {
+    outline: none;
+    border-color: #C67C4E;
+    box-shadow: 0 0 0 4px rgba(198, 124, 78, 0.15);
+}
+
+.email-input-modern::placeholder {
+    color: #9B8A78;
+}
+
+.subscribe-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 32px;
+    background: linear-gradient(135deg, #C67C4E 0%, #A65F35 100%);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.subscribe-btn svg {
+    width: 20px;
+    height: 20px;
+    transition: transform 0.3s ease;
+}
+
+.subscribe-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(198, 124, 78, 0.5);
+}
+
+.subscribe-btn:hover svg {
+    transform: translateX(5px);
+}
+
+.newsletter-privacy {
+    font-size: 0.85rem;
+    color: #9B8A78;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .newsletter-card {
+        padding: 40px 25px;
+    }
+    
+    .newsletter-title {
+        font-size: 1.8rem;
+    }
+    
+    .newsletter-form-modern {
+        flex-direction: column;
+    }
+    
+    .subscribe-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}
