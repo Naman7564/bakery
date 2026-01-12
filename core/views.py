@@ -58,7 +58,7 @@ def products(request):
     context = {
         'products': products,
         'categories': categories,
-        'current_category': current_category,
+        'current_category': current_category,  # pass the object, not just the slug
         'search_query': search_query,
     }
     return render(request, 'core/products.html', context)

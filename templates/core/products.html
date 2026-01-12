@@ -33,8 +33,7 @@
                                 class="filter-link {% if not current_category %}active{% endif %}">All Products</a></li>
                         {% for category in categories %}
                         <li><a href="{% url 'core:products' %}?category={{ category.slug }}"
-                                class="filter-link {% if current_category == category.slug %}active{% endif %}">{{
-                                category.name|title }}</a></li>
+                                class="filter-link {% if current_category and current_category.slug == category.slug %}active{% endif %}">{{ category.name|title }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
