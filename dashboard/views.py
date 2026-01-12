@@ -9,11 +9,13 @@ def index(request):
     recent_orders = Order.objects.filter(user=request.user)[:5]
     total_orders = Order.objects.filter(user=request.user).count()
     pending_orders = Order.objects.filter(user=request.user, status='pending').count()
+    delivered_orders = Order.objects.filter(user=request.user, status='delivered').count()
     
     context = {
         'recent_orders': recent_orders,
         'total_orders': total_orders,
         'pending_orders': pending_orders,
+        'delivered_orders': delivered_orders,
     }
     return render(request, 'dashboard/index.html', context)
 
