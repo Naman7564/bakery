@@ -7,8 +7,20 @@
 <section class="page-section">
     <div class="container">
         <div class="page-header">
-            <h1 class="page-title">Our Products</h1>
-            <p class="page-subtitle">Explore our freshly baked delights</p>
+            <h1 class="page-title">
+                {% if current_category %}
+                    {{ current_category.name|title }}
+                {% else %}
+                    Our Products
+                {% endif %}
+            </h1>
+            <p class="page-subtitle">
+                {% if current_category and current_category.description %}
+                    {{ current_category.description }}
+                {% else %}
+                    Explore our freshly baked delights
+                {% endif %}
+            </p>
         </div>
 
         <div class="products-page-layout">

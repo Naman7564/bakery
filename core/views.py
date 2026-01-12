@@ -40,23 +40,25 @@ def products(request):
     """Product listing view"""
     products = Product.objects.filter(is_available=True)
     categories = Category.objects.filter(is_active=True)
-    
+
     # Filter by category
     category_slug = request.GET.get('category')
+    current_category = None
     if category_slug:
-        products = products.filter(category__slug=category_slug)
-    
+        current_category = get_object_or_404(Category, slug=category_slug, is_active=True)
+        products = products.filter(category=current_category)
+
     # Search
     search_query = request.GET.get('q')
     if search_query:
         products = products.filter(
             Q(name__icontains=search_query) | Q(description__icontains=search_query)
         )
-    
+
     context = {
         'products': products,
         'categories': categories,
-        'current_category': category_slug,
+        'current_category': current_category,
         'search_query': search_query,
     }
     return render(request, 'core/products.html', context)
