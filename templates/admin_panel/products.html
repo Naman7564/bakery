@@ -1,4 +1,4 @@
-﻿{% extends 'admin_panel/base.html' %}
+{% extends 'admin_panel/base.html' %}
 
 {% block title %}Products{% endblock %}
 
@@ -23,8 +23,7 @@
                     class="filter-btn {% if not current_category %}active{% endif %}">All</a>
                 {% for category in categories %}
                 <a href="{% url 'admin_panel:products' %}?category={{ category.slug }}"
-                    class="filter-btn {% if current_category == category.slug %}active{% endif %}">{{ category.name
-                    }}</a>
+                    class="filter-btn {% if current_category == category.slug %}active{% endif %}">{{ category.name }}</a>
                 {% endfor %}
             </div>
         </div>
