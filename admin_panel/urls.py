@@ -30,6 +30,7 @@ urlpatterns = [
     # Users
     path('users/', views.users_list, name='users'),
     path('users/<int:user_id>/', views.user_detail, name='user_detail'),
+    path('users/<int:user_id>/change-password/', views.user_change_password, name='user_change_password'),
     
     # Messages
     path('messages/', views.messages_list, name='messages'),

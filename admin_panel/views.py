@@ -6,7 +6,7 @@ from django.utils import timezone
 from datetime import timedelta
 
 from .decorators import admin_required
-from .forms import ProductForm, CategoryForm
+from .forms import ProductForm, CategoryForm, AdminUserPasswordChangeForm
 from core.models import Product, Category, Order, ContactMessage
 from accounts.models import CustomUser
 
@@ -272,3 +272,26 @@ def message_detail(request, message_id):
         message.is_read = True
         message.save()
     return render(request, 'admin_panel/message_detail.html', {'message': message})
+
+
+# User Password Change
+@admin_required
+def user_change_password(request, user_id):
+    """Change a user's password"""
+    user = get_object_or_404(CustomUser, id=user_id)
+    
+    if request.method == 'POST':
+        form = AdminUserPasswordChangeForm(request.POST)
+        if form.is_valid():
+            user.set_password(form.cleaned_data['new_password1'])
+            user.save()
+            messages.success(request, f'Password changed successfully for {user.email}!')
+            return redirect('admin_panel:user_detail', user_id=user_id)
+    else:
+        form = AdminUserPasswordChangeForm()
+    
+    context = {
+        'form': form,
+        'user_obj': user,
+    }
+    return render(request, 'admin_panel/user_change_password.html', context)

@@ -48,6 +48,11 @@
                     <span class="meta-value">{{ orders.count }}</span>
                 </div>
             </div>
+            <div style="margin-top: 20px;">
+                <a href="{% url 'admin_panel:user_change_password' user_id=user_obj.id %}" class="btn btn-primary">
+                    🔐 Change Password
+                </a>
+            </div>
         </div>
     </div>
 

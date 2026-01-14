@@ -30,3 +30,23 @@ class CategoryForm(forms.ModelForm):
             'slug': forms.TextInput(attrs={'class': 'admin-input'}),
             'description': forms.Textarea(attrs={'class': 'admin-textarea', 'rows': 3}),
         }
+
+
+class AdminUserPasswordChangeForm(forms.Form):
+    """Form for admins to change user passwords"""
+    new_password1 = forms.CharField(
+        label='New Password',
+        widget=forms.PasswordInput(attrs={'class': 'admin-input', 'placeholder': 'Enter new password'})
+    )
+    new_password2 = forms.CharField(
+        label='Confirm Password',
+        widget=forms.PasswordInput(attrs={'class': 'admin-input', 'placeholder': 'Confirm new password'})
+    )
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        password1 = cleaned_data.get('new_password1')
+        password2 = cleaned_data.get('new_password2')
+        if password1 and password2 and password1 != password2:
+            raise forms.ValidationError("Passwords don't match")
+        return cleaned_data
