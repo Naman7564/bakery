@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.db.models import Sum
 from core.models import Order
 
 
@@ -11,11 +12,18 @@ def index(request):
     pending_orders = Order.objects.filter(user=request.user, status='pending').count()
     delivered_orders = Order.objects.filter(user=request.user, status='delivered').count()
     
+    # Calculate total spent from delivered orders
+    total_spent = Order.objects.filter(
+        user=request.user, 
+        status='delivered'
+    ).aggregate(total=Sum('total'))['total'] or 0
+    
     context = {
         'recent_orders': recent_orders,
         'total_orders': total_orders,
         'pending_orders': pending_orders,
         'delivered_orders': delivered_orders,
+        'total_spent': total_spent,
     }
     return render(request, 'dashboard/index.html', context)
 
