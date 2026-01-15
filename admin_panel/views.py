@@ -221,9 +221,20 @@ def order_detail(request, order_id):
     if request.method == 'POST':
         new_status = request.POST.get('status')
         if new_status:
+            old_status = order.status
             order.status = new_status
             order.save()
             messages.success(request, f'Order status updated to {order.get_status_display()}')
+            
+            # Check cancellation threshold if order was cancelled
+            if new_status == 'cancelled' and old_status != 'cancelled':
+                from core.spam_protection import check_cancellation_threshold
+                cancelled_count = check_cancellation_threshold(order.user)
+                if cancelled_count >= 3:
+                    messages.warning(
+                        request, 
+                        f'User {order.user.email} has been auto-blocked after {cancelled_count} cancellations.'
+                    )
     
     return render(request, 'admin_panel/order_detail.html', {'order': order})
 

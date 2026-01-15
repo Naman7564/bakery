@@ -1,5 +1,9 @@
+@Library('shared-pipeline-library') _
+
 pipeline {
-    agent any
+    agent {
+        label 'doraemon'
+    }
 
     stages {
         stage('Code') {
@@ -7,6 +11,13 @@ pipeline {
                 echo "Code Clone Stage"
                 git branch: 'main',
                     url: 'https://github.com/Naman7564/bakery.git'
+            }
+        }
+
+        stage('Backup') {
+            steps {
+                echo "Creating Backup of Previous Image..."
+                dockerBackup()
             }
         }
 
@@ -24,16 +35,10 @@ pipeline {
             }
         }
 
-        stage("Push To DockerHub") {
+        stage('Push To DockerHub') {
             steps {
                 echo "Pushing to Docker Hub"
-            }
-        }
-
-        stage('Backup') {
-            steps {
-                echo "Creating Backup..."
-                sh "docker tag bakery:latest bakery:backup"
+                docker_push("bakery", "naman7564", "latest")
             }
         }
 
@@ -47,9 +52,7 @@ pipeline {
 
     post {
         failure {
-            echo "Deployment failed! Rolling back..."
-            sh "docker tag bakery:backup bakery:latest"
-            sh "docker compose down && docker compose up -d"
+            dockerRollback()
         }
     }
 }

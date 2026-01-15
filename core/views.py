@@ -204,6 +204,14 @@ def checkout(request):
         phone = request.POST.get('phone')
         notes = request.POST.get('notes', '')
         
+        # Spam protection validation
+        from .spam_protection import validate_order_allowed, record_order, get_client_ip
+        
+        is_allowed, error_message = validate_order_allowed(request, phone)
+        if not is_allowed:
+            messages.error(request, error_message)
+            return render(request, 'core/checkout.html', {'cart': cart})
+        
         # Create order
         order_number = f"BWL{uuid.uuid4().hex[:8].upper()}"
         order = Order.objects.create(
@@ -225,6 +233,10 @@ def checkout(request):
                 quantity=item.quantity
             )
         
+        # Record order for rate limiting
+        ip_address = get_client_ip(request)
+        record_order(phone, ip_address)
+        
         # Clear cart
         cart.items.all().delete()
         
@@ -233,3 +245,4 @@ def checkout(request):
     
     context = {'cart': cart}
     return render(request, 'core/checkout.html', context)
+

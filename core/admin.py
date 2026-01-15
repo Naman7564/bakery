@@ -50,3 +50,35 @@ class ContactMessageAdmin(admin.ModelAdmin):
     list_display = ['name', 'email', 'subject', 'is_read', 'created_at']
     list_filter = ['is_read', 'created_at']
     search_fields = ['name', 'email', 'subject']
+
+
+# Spam Protection Models
+from .spam_protection import BlockedUser, OrderRateLimit
+
+
+@admin.register(BlockedUser)
+class BlockedUserAdmin(admin.ModelAdmin):
+    list_display = ['__str__', 'reason', 'is_active', 'blocked_at']
+    list_filter = ['reason', 'is_active', 'blocked_at']
+    search_fields = ['user__email', 'phone', 'ip_address']
+    list_editable = ['is_active']
+    readonly_fields = ['blocked_at']
+    
+    fieldsets = (
+        (None, {
+            'fields': ('user', 'phone', 'ip_address')
+        }),
+        ('Block Details', {
+            'fields': ('reason', 'notes', 'is_active', 'blocked_at')
+        }),
+    )
+
+
+@admin.register(OrderRateLimit)
+class OrderRateLimitAdmin(admin.ModelAdmin):
+    list_display = ['phone', 'ip_address', 'date', 'order_count', 'last_order_at']
+    list_filter = ['date']
+    search_fields = ['phone', 'ip_address']
+    readonly_fields = ['phone', 'ip_address', 'date', 'order_count', 'last_order_at']
+    date_hierarchy = 'date'
+
