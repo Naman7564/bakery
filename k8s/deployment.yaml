@@ -119,6 +119,7 @@ spec:
   containers:
     - name: django
       image: naman7564/bake-with-love:latest
+      imagePullPolicy: Never
       ports:
         - containerPort: 8000
           name: http
