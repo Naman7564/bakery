@@ -5,9 +5,7 @@
 {% block content %}
 <div class="admin-page-header">
     <div>
-        <h1>{% if block %}✏️ Edit Block{% else %}🚫 Add Block{% endif %}</h1>
-        <p class="admin-page-subtitle">{% if block %}Update block details{% else %}Block a user, phone, or IP address{%
-            endif %}</p>
+        <p class="admin-page-subtitle">{% if block %}Update block details{% else %}Block a user, phone, or IP address{% endif %}</p>
     </div>
 </div>
 
@@ -55,7 +53,7 @@
                 <label for="reason">Reason</label>
                 <select name="reason" id="reason" class="admin-select">
                     {% for value, label in reasons %}
-                    <option value="{{ value }}" {% if block and block.reason == value %}selected{% endif %}>
+                    <option value="{{ value }}" {% if block and block.reason==value %}selected{% endif %}>
                         {{ label }}
                     </option>
                     {% endfor %}
