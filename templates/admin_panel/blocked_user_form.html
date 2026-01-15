@@ -55,7 +55,7 @@
                 <label for="reason">Reason</label>
                 <select name="reason" id="reason" class="admin-select">
                     {% for value, label in reasons %}
-                    <option value="{{ value }}" {% if block and block.reason==value %}selected{% endif %}>
+                    <option value="{{ value }}" {% if block and block.reason == value %}selected{% endif %}>
                         {{ label }}
                     </option>
                     {% endfor %}
