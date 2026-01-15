@@ -1,0 +1,8 @@
+# Kubernetes Namespace for Bake with Love Bakery
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: bakery
+  labels:
+    app: bake-with-love
+    environment: development
