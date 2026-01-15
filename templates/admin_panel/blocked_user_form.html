@@ -1,0 +1,89 @@
+{% extends 'admin_panel/base.html' %}
+
+{% block title %}{% if block %}Edit Block{% else %}Add Block{% endif %}{% endblock %}
+
+{% block content %}
+<div class="admin-page-header">
+    <div>
+        <h1>{% if block %}✏️ Edit Block{% else %}🚫 Add Block{% endif %}</h1>
+        <p class="admin-page-subtitle">{% if block %}Update block details{% else %}Block a user, phone, or IP address{%
+            endif %}</p>
+    </div>
+</div>
+
+<div class="admin-card">
+    <div class="card-body">
+        <form method="POST" class="admin-form">
+            {% csrf_token %}
+
+            {% if not block %}
+            <div class="form-group">
+                <label for="user_id">User (Optional)</label>
+                <select name="user_id" id="user_id" class="admin-select">
+                    <option value="">— Select a user to block —</option>
+                    {% for user_obj in users %}
+                    <option value="{{ user_obj.id }}">{{ user_obj.email }} ({{
+                        user_obj.full_name|default:user_obj.username }})</option>
+                    {% endfor %}
+                </select>
+                <small class="text-muted">Select a user or leave empty to block by phone/IP only</small>
+            </div>
+            {% else %}
+            {% if block.user %}
+            <div class="form-group">
+                <label>Blocked User</label>
+                <p><strong>{{ block.user.email }}</strong> ({{ block.user.full_name|default:block.user.username }})</p>
+            </div>
+            {% endif %}
+            {% endif %}
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="text" name="phone" id="phone" class="admin-input"
+                        value="{% if block %}{{ block.phone }}{% endif %}" placeholder="e.g., +91 9876543210">
+                </div>
+                <div class="form-group">
+                    <label for="ip_address">IP Address</label>
+                    <input type="text" name="ip_address" id="ip_address" class="admin-input"
+                        value="{% if block %}{{ block.ip_address|default:'' }}{% endif %}"
+                        placeholder="e.g., 192.168.1.1">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="reason">Reason</label>
+                <select name="reason" id="reason" class="admin-select">
+                    {% for value, label in reasons %}
+                    <option value="{{ value }}" {% if block and block.reason==value %}selected{% endif %}>
+                        {{ label }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="notes">Notes</label>
+                <textarea name="notes" id="notes" class="admin-textarea" rows="3"
+                    placeholder="Additional notes about this block...">{% if block %}{{ block.notes }}{% endif %}</textarea>
+            </div>
+
+            {% if block %}
+            <div class="form-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="is_active" {% if block.is_active %}checked{% endif %}>
+                    Block is Active
+                </label>
+            </div>
+            {% endif %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-admin-primary">
+                    {% if block %}Update Block{% else %}Create Block{% endif %}
+                </button>
+                <a href="{% url 'admin_panel:blocked_users' %}" class="btn-admin-outline">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

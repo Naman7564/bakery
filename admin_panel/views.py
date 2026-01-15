@@ -306,3 +306,135 @@ def user_change_password(request, user_id):
         'user_obj': user,
     }
     return render(request, 'admin_panel/user_change_password.html', context)
+
+
+# Blocked Users Management (Spam Protection)
+@admin_required
+def blocked_users_list(request):
+    """List all blocked users/phones/IPs"""
+    from core.spam_protection import BlockedUser, OrderRateLimit
+    
+    blocked_users = BlockedUser.objects.all().order_by('-blocked_at')
+    
+    # Filter by status
+    status = request.GET.get('status')
+    if status == 'active':
+        blocked_users = blocked_users.filter(is_active=True)
+    elif status == 'inactive':
+        blocked_users = blocked_users.filter(is_active=False)
+    
+    # Filter by reason
+    reason = request.GET.get('reason')
+    if reason:
+        blocked_users = blocked_users.filter(reason=reason)
+    
+    # Search
+    search = request.GET.get('q')
+    if search:
+        from django.db.models import Q
+        blocked_users = blocked_users.filter(
+            Q(phone__icontains=search) |
+            Q(ip_address__icontains=search) |
+            Q(user__email__icontains=search)
+        )
+    
+    # Get today's rate limits for stats
+    today_limits = OrderRateLimit.objects.filter(date=timezone.now().date())
+    
+    context = {
+        'blocked_users': blocked_users,
+        'current_status': status,
+        'current_reason': reason,
+        'search_query': search,
+        'total_blocked': BlockedUser.objects.filter(is_active=True).count(),
+        'today_orders_tracked': today_limits.count(),
+    }
+    return render(request, 'admin_panel/blocked_users.html', context)
+
+
+@admin_required
+def blocked_user_create(request):
+    """Manually block a user/phone/IP"""
+    from core.spam_protection import BlockedUser
+    
+    if request.method == 'POST':
+        user_id = request.POST.get('user_id')
+        phone = request.POST.get('phone', '').strip()
+        ip_address = request.POST.get('ip_address', '').strip()
+        reason = request.POST.get('reason', 'manual')
+        notes = request.POST.get('notes', '')
+        
+        user = None
+        if user_id:
+            user = CustomUser.objects.filter(id=user_id).first()
+        
+        BlockedUser.objects.create(
+            user=user,
+            phone=phone,
+            ip_address=ip_address if ip_address else None,
+            reason=reason,
+            notes=notes
+        )
+        messages.success(request, 'Block entry created successfully!')
+        return redirect('admin_panel:blocked_users')
+    
+    users = CustomUser.objects.filter(is_admin_user=False, is_superuser=False)
+    context = {
+        'users': users,
+        'reasons': BlockedUser.REASON_CHOICES,
+    }
+    return render(request, 'admin_panel/blocked_user_form.html', context)
+
+
+@admin_required
+def blocked_user_edit(request, block_id):
+    """Edit a block entry"""
+    from core.spam_protection import BlockedUser
+    
+    block = get_object_or_404(BlockedUser, id=block_id)
+    
+    if request.method == 'POST':
+        block.phone = request.POST.get('phone', '').strip()
+        ip_address = request.POST.get('ip_address', '').strip()
+        block.ip_address = ip_address if ip_address else None
+        block.reason = request.POST.get('reason', 'manual')
+        block.notes = request.POST.get('notes', '')
+        block.is_active = request.POST.get('is_active') == 'on'
+        block.save()
+        messages.success(request, 'Block entry updated successfully!')
+        return redirect('admin_panel:blocked_users')
+    
+    users = CustomUser.objects.filter(is_admin_user=False, is_superuser=False)
+    context = {
+        'block': block,
+        'users': users,
+        'reasons': BlockedUser.REASON_CHOICES,
+    }
+    return render(request, 'admin_panel/blocked_user_form.html', context)
+
+
+@admin_required
+def blocked_user_delete(request, block_id):
+    """Delete a block entry"""
+    from core.spam_protection import BlockedUser
+    
+    block = get_object_or_404(BlockedUser, id=block_id)
+    if request.method == 'POST':
+        block.delete()
+        messages.success(request, 'Block entry deleted successfully!')
+    return redirect('admin_panel:blocked_users')
+
+
+@admin_required
+def blocked_user_toggle(request, block_id):
+    """Toggle block active status"""
+    from core.spam_protection import BlockedUser
+    
+    block = get_object_or_404(BlockedUser, id=block_id)
+    block.is_active = not block.is_active
+    block.save()
+    
+    status = 'activated' if block.is_active else 'deactivated'
+    messages.success(request, f'Block {status} successfully!')
+    return redirect('admin_panel:blocked_users')
+

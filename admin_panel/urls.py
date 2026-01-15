@@ -35,4 +35,11 @@ urlpatterns = [
     # Messages
     path('messages/', views.messages_list, name='messages'),
     path('messages/<int:message_id>/', views.message_detail, name='message_detail'),
+    
+    # Blocked Users (Spam Protection)
+    path('blocked-users/', views.blocked_users_list, name='blocked_users'),
+    path('blocked-users/create/', views.blocked_user_create, name='blocked_user_create'),
+    path('blocked-users/<int:block_id>/edit/', views.blocked_user_edit, name='blocked_user_edit'),
+    path('blocked-users/<int:block_id>/delete/', views.blocked_user_delete, name='blocked_user_delete'),
+    path('blocked-users/<int:block_id>/toggle/', views.blocked_user_toggle, name='blocked_user_toggle'),
 ]
